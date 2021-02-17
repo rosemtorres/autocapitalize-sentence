@@ -10,11 +10,15 @@
 <input type="text" class="capitalize">
 
 <script>
-	$(".capitalize").keyup(function() {
-		capitalizeEverySentence(this);
+	$(".capitalize").keyup(function(e) {
+		capitalizeEverySentence(this,e);
 	});
 
-	function capitalizeEverySentence(obj) {
+	function capitalizeEverySentence(obj,e) {
+		var disableKeys = ['Backspace', 'ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'];
+		if (disableKeys.indexOf(e.key) !== -1)
+			return false;
+		
 		inputValue = obj.value;
 		var lastCharacter = obj.value.slice(-1);
 		var last2ndCharacter = obj.value.slice(-2,-1);
@@ -23,18 +27,16 @@
 		var word = [inputValue];
 		var newstring = word;
 
-		if (lastCharacter === ' ') {
-			if (splitOptions.indexOf(last2ndCharacter) !== -1) {
-				sentenceSplit = inputValue.match(/.*?[?!.]/g);
-				var f ,r;
-				for (i = 0 ; i < sentenceSplit.length ; i ++ ) {
-					sentenceTrimmed = sentenceSplit[i].trimStart();
-					f = sentenceTrimmed.substring(0,1).toUpperCase();
-					r = sentenceTrimmed.substring(1).toLowerCase();
-					word[i] = f+r;
-				}
-				obj.value = word.join(" ") + " ";
+		if (splitOptions.indexOf(lastCharacter) !== -1) {
+			sentenceSplit = inputValue.match(/.*?[?!.]/g);
+			var f ,r;
+			for (i = 0 ; i < sentenceSplit.length ; i ++ ) {
+				sentenceTrimmed = sentenceSplit[i].trimStart();
+				f = sentenceTrimmed.substring(0,1).toUpperCase();
+				r = sentenceTrimmed.substring(1).toLowerCase();
+				word[i] = f+r;
 			}
+			obj.value = word.join(" ") + " ";
 		}
 	}
 </script>
